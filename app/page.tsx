@@ -1,69 +1,295 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import MainLayout from "@/components/layout/MainLayout";
+import TaskBoard, { Task } from "@/components/tasks/TaskBoard";
+import TaskFilters from "@/components/filters/TaskFilters";
+import ThemeSwitcher from "@/components/theme/ThemeSwitcher";
+import SearchBar from "@/components/ui/SearchBar";
+import TaskModal from "@/components/tasks/TaskModal";
+
+const initialTasks: Task[] = [
+  {
+    id: "1",
+    title: "Design Homepage",
+    priority: "High",
+    member: "A",
+    dueDate: "12 Sep 2026",
+    status: "todo",
+  },
+  {
+    id: "2",
+    title: "Develop Login Feature",
+    priority: "Low",
+    member: "CN",
+    dueDate: "15 Sep 2026",
+    status: "todo",
+  },
+  {
+    id: "3",
+    title: "Code Review Completed",
+    priority: "Low",
+    member: "A",
+    dueDate: "29 Jul",
+    status: "doing",
+  },
+  {
+    id: "4",
+    title: "Design Mockups Finalized",
+    priority: "Low",
+    member: "CN",
+    dueDate: "29 Jul",
+    status: "doing",
+  },
+  {
+    id: "5",
+    title: "Feature Testing Passed",
+    priority: "Low",
+    member: "A",
+    dueDate: "30 Jul",
+    status: "completed",
+  },
+  {
+    id: "6",
+    title: "UI Design Updated",
+    priority: "Medium",
+    member: "A",
+    dueDate: "31 Jul",
+    status: "completed",
+  },
+  {
+    id: "7",
+    title: "Backend Integration",
+    priority: "Medium",
+    member: "Dev",
+    dueDate: "02 Aug",
+    status: "onHold",
+  },
+];
+
+type FilterValues = {
+  status: string;
+  priority: string;
+  member: string;
+};
+
+const STORAGE_KEY = "ablespace-tasks";
 
 export default function Home() {
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+
+  const [filters, setFilters] = useState<FilterValues>({
+    status: "All",
+    priority: "All",
+    member: "All",
+  });
+
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [modalStatus, setModalStatus] =
+    useState<Task["status"]>("todo");
+
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+
+  // Load saved tasks after the page has mounted
+  useEffect(() => {
+    try {
+      const savedTasks = localStorage.getItem(STORAGE_KEY);
+
+      if (savedTasks) {
+        setTasks(JSON.parse(savedTasks));
+      }
+    } catch {
+      console.log("Could not load saved tasks.");
+    }
+
+    setIsLoaded(true);
+  }, []);
+
+  // Save tasks whenever they change
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(tasks)
+    );
+  }, [tasks, isLoaded]);
+
+  const openTaskModal = (
+    status: Task["status"] = "todo"
+  ) => {
+    setEditingTask(null);
+    setModalStatus(status);
+    setShowTaskModal(true);
+  };
+
+  const addTask = (task: Omit<Task, "id">) => {
+    const newTask: Task = {
+      ...task,
+      id: crypto.randomUUID(),
+    };
+
+    setTasks((currentTasks) => [
+      ...currentTasks,
+      newTask,
+    ]);
+  };
+
+  const deleteTask = (id: string) => {
+    setTasks((currentTasks) =>
+      currentTasks.filter((task) => task.id !== id)
+    );
+  };
+
+  const editTask = (task: Task) => {
+    setEditingTask(task);
+    setModalStatus(task.status);
+    setShowTaskModal(true);
+  };
+
+  const updateTask = (updatedTask: Omit<Task, "id">) => {
+    if (!editingTask) return;
+
+    setTasks((currentTasks) =>
+      currentTasks.map((task) =>
+        task.id === editingTask.id
+          ? {
+              ...updatedTask,
+              id: editingTask.id,
+            }
+          : task
+      )
+    );
+
+    setEditingTask(null);
+  };
+
+  const changeTaskStatus = (
+    id: string,
+    status: Task["status"]
+  ) => {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) =>
+        task.id === id
+          ? { ...task, status }
+          : task
+      )
+    );
+  };
+
+  const filteredTasks = useMemo(() => {
+    return tasks.filter((task) => {
+      const matchesSearch = task.title
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+      const matchesPriority =
+        filters.priority === "All" ||
+        task.priority === filters.priority;
+
+      const matchesMember =
+        filters.member === "All" ||
+        task.member === filters.member;
+
+      const statusMap: Record<
+        string,
+        Task["status"]
+      > = {
+        "To Do": "todo",
+        Doing: "doing",
+        Completed: "completed",
+        "On Hold": "onHold",
+      };
+
+      const matchesStatus =
+        filters.status === "All" ||
+        task.status === statusMap[filters.status];
+
+      return (
+        matchesSearch &&
+        matchesPriority &&
+        matchesMember &&
+        matchesStatus
+      );
+    });
+  }, [tasks, search, filters]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <MainLayout>
+      <div className="min-h-screen bg-[#fafafa]">
+        <header className="flex min-h-16 items-center justify-between gap-4 border-b border-[#e8e8e8] bg-white px-6">
+          <h1 className="text-lg font-semibold text-[#171717]">
+            Tasks
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+
+          <div className="flex items-center gap-2">
+            <SearchBar
+              value={search}
+              onSearch={setSearch}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+            <button
+              type="button"
+              onClick={() =>
+                setShowFilters((current) => !current)
+              }
+              className="rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#666666] hover:bg-[#f7f7f7]"
+            >
+              Filter
+            </button>
+
+            <ThemeSwitcher />
+
+            <button
+              type="button"
+              onClick={() => openTaskModal("todo")}
+              className="rounded-md bg-[#171717] px-4 py-2 text-sm font-medium text-white hover:bg-[#333333]"
+            >
+              + Add Task
+            </button>
+          </div>
+        </header>
+
+        <div className="relative p-6">
+          {showFilters && (
+            <div className="absolute right-6 top-20 z-20">
+              <TaskFilters
+                values={filters}
+                onChange={setFilters}
+                onClose={() => setShowFilters(false)}
+              />
+            </div>
+          )}
+
+          <TaskBoard
+            tasks={filteredTasks}
+            onAddTask={openTaskModal}
+            onEdit={editTask}
+            onDelete={deleteTask}
+            onStatusChange={changeTaskStatus}
+          />
         </div>
-      </main>
-    </div>
+      </div>
+
+      {showTaskModal && (
+        <TaskModal
+          defaultStatus={modalStatus}
+          task={editingTask}
+          onClose={() => {
+            setShowTaskModal(false);
+            setEditingTask(null);
+          }}
+          onAdd={
+            editingTask
+              ? updateTask
+              : addTask
+          }
+        />
+      )}
+    </MainLayout>
   );
 }
