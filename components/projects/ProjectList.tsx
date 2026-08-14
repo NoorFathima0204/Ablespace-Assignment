@@ -161,66 +161,137 @@ export default function ProjectList({
 
   return (
     <>
-      <div className="overflow-hidden rounded-lg border border-[#e5e5e5] bg-white">
-        <div className="grid grid-cols-[2fr_1fr_1fr_1fr_auto] border-b bg-gray-50 px-5 py-3 text-xs font-medium text-gray-500">
-          <span>Project</span>
-          <span>Priority</span>
-          <span>Lead</span>
-          <span>Due Date</span>
-          <span></span>
+      <div className="rounded-lg border border-[#e5e5e5] bg-white">
+
+  {/* Desktop table */}
+  <div className="hidden md:block overflow-hidden">
+    <div className="grid grid-cols-[2fr_1fr_1fr_1fr_auto] border-b bg-[#fafafa] px-5 py-3 text-xs font-medium text-[#666666]">
+      <span>Project</span>
+      <span>Priority</span>
+      <span>Lead</span>
+      <span>Due Date</span>
+      <span></span>
+    </div>
+
+    {projects.map((project) => (
+      <div
+        key={project.id}
+        className="grid grid-cols-[2fr_1fr_1fr_1fr_auto] items-center border-b px-5 py-4 text-sm last:border-b-0"
+      >
+        <span className="font-medium text-[#171717]">
+          {project.name}
+        </span>
+
+        <span
+          className={
+            project.priority === "High"
+              ? "text-red-500"
+              : project.priority === "Medium"
+                ? "text-orange-500"
+                : "text-green-600"
+          }
+        >
+          {project.priority}
+        </span>
+
+        <span className="text-[#555555]">
+          {project.lead}
+        </span>
+
+        <span className="text-[#666666]">
+          {project.dueDate}
+        </span>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => openEditModal(project)}
+            className="rounded-md px-2 py-1 text-xs text-[#666666] hover:bg-[#f5f5f5] hover:text-[#171717]"
+          >
+            Edit
+          </button>
+
+          <button
+            type="button"
+            onClick={() => deleteProject(project.id)}
+            className="rounded-md px-2 py-1 text-xs text-red-500 hover:bg-red-50"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  {/* Mobile cards */}
+  <div className="divide-y divide-[#eeeeee] md:hidden">
+    {projects.map((project) => (
+      <div
+        key={project.id}
+        className="p-4"
+      >
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <h3 className="font-medium text-[#171717]">
+            {project.name}
+          </h3>
+
+          <span
+            className={
+              project.priority === "High"
+                ? "shrink-0 text-sm text-red-500"
+                : project.priority === "Medium"
+                  ? "shrink-0 text-sm text-orange-500"
+                  : "shrink-0 text-sm text-green-600"
+            }
+          >
+            {project.priority}
+          </span>
         </div>
 
-        {projects.map((project) => (
-          <div
-            key={project.id}
-            className="grid grid-cols-[2fr_1fr_1fr_1fr_auto] items-center border-b px-5 py-4 text-sm last:border-b-0"
-          >
-            <span className="font-medium text-[#171717]">
-              {project.name}
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between gap-4">
+            <span className="text-[#888888]">
+              Lead
             </span>
 
-            <span
-              className={
-                project.priority === "High"
-                  ? "text-red-500"
-                  : project.priority === "Medium"
-                    ? "text-orange-500"
-                    : "text-green-600"
-              }
-            >
-              {project.priority}
+            <span className="text-right text-[#333333]">
+              {project.lead}
+            </span>
+          </div>
+
+          <div className="flex justify-between gap-4">
+            <span className="text-[#888888]">
+              Due Date
             </span>
 
-            <span>{project.lead}</span>
-
-            <span className="text-gray-500">
+            <span className="text-right text-[#333333]">
               {project.dueDate}
             </span>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() =>
-                  openEditModal(project)
-                }
-                className="rounded-md px-2 py-1 text-xs text-[#666666] hover:bg-[#f5f5f5] hover:text-[#171717]"
-              >
-                Edit
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  deleteProject(project.id)
-                }
-                className="rounded-md px-2 py-1 text-xs text-red-500 hover:bg-red-50"
-              >
-                Delete
-              </button>
-            </div>
           </div>
-        ))}
+        </div>
+
+        <div className="mt-4 flex gap-2 border-t border-[#eeeeee] pt-3">
+          <button
+            type="button"
+            onClick={() => openEditModal(project)}
+            className="flex-1 rounded-md border border-[#e5e5e5] px-3 py-2 text-sm text-[#555555] hover:bg-[#f7f7f7]"
+          >
+            Edit
+          </button>
+
+          <button
+            type="button"
+            onClick={() => deleteProject(project.id)}
+            className="flex-1 rounded-md border border-red-100 px-3 py-2 text-sm text-red-500 hover:bg-red-50"
+          >
+            Delete
+          </button>
+        </div>
       </div>
+    ))}
+  </div>
+
+</div>
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -314,11 +385,11 @@ export default function ProjectList({
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3">
+              <div className="flex flex-col-reverse gap-2 pt-3 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="rounded-md border border-[#e5e5e5] px-4 py-2 text-sm text-[#666666]"
+                  className="rounded-md border border-[#e5e5e5] px-4 py-2 text-sm text-[#666666] hover:bg-[#f7f7f7]"
                 >
                   Cancel
                 </button>
