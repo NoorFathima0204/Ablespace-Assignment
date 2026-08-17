@@ -60,6 +60,11 @@ export default function ProjectList({
   const [lead, setLead] = useState("");
   const [dueDate, setDueDate] = useState("");
 
+  const [showFilters, setShowFilters] = useState(false);
+  const [filterPriority, setFilterPriority] =
+    useState("All");
+  const [filterLead, setFilterLead] = useState("All");
+
   useEffect(() => {
     try {
       const savedProjects =
@@ -159,139 +164,236 @@ export default function ProjectList({
     );
   };
 
+  const filteredProjects = projects.filter((project) => {
+    const matchesPriority =
+      filterPriority === "All" ||
+      project.priority === filterPriority;
+
+    const matchesLead =
+      filterLead === "All" ||
+      project.lead === filterLead;
+
+    return matchesPriority && matchesLead;
+  });
+
+  const clearFilters = () => {
+    setFilterPriority("All");
+    setFilterLead("All");
+  };
+
+  const leads = [
+    ...new Set(projects.map((project) => project.lead)),
+  ];
+
   return (
     <>
-      <div className="rounded-lg border border-[#e5e5e5] bg-white">
-
-  {/* Desktop table */}
-  <div className="hidden md:block overflow-hidden">
-    <div className="grid grid-cols-[2fr_1fr_1fr_1fr_auto] border-b bg-[#fafafa] px-5 py-3 text-xs font-medium text-[#666666]">
-      <span>Project</span>
-      <span>Priority</span>
-      <span>Lead</span>
-      <span>Due Date</span>
-      <span></span>
-    </div>
-
-    {projects.map((project) => (
-      <div
-        key={project.id}
-        className="grid grid-cols-[2fr_1fr_1fr_1fr_auto] items-center border-b px-5 py-4 text-sm last:border-b-0"
-      >
-        <span className="font-medium text-[#171717]">
-          {project.name}
-        </span>
-
-        <span
-          className={
-            project.priority === "High"
-              ? "text-red-500"
-              : project.priority === "Medium"
-                ? "text-orange-500"
-                : "text-green-600"
+      <div className="mb-4 flex items-center justify-end">
+        <button
+          type="button"
+          onClick={() =>
+            setShowFilters((current) => !current)
           }
+          className="rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#666666] hover:bg-[#f7f7f7]"
         >
-          {project.priority}
-        </span>
-
-        <span className="text-[#555555]">
-          {project.lead}
-        </span>
-
-        <span className="text-[#666666]">
-          {project.dueDate}
-        </span>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => openEditModal(project)}
-            className="rounded-md px-2 py-1 text-xs text-[#666666] hover:bg-[#f5f5f5] hover:text-[#171717]"
-          >
-            Edit
-          </button>
-
-          <button
-            type="button"
-            onClick={() => deleteProject(project.id)}
-            className="rounded-md px-2 py-1 text-xs text-red-500 hover:bg-red-50"
-          >
-            Delete
-          </button>
-        </div>
+          Filter
+        </button>
       </div>
-    ))}
-  </div>
 
-  {/* Mobile cards */}
-  <div className="divide-y divide-[#eeeeee] md:hidden">
-    {projects.map((project) => (
-      <div
-        key={project.id}
-        className="p-4"
-      >
-        <div className="mb-3 flex items-start justify-between gap-3">
-          <h3 className="font-medium text-[#171717]">
-            {project.name}
-          </h3>
+      {showFilters && (
+        <div className="mb-4 rounded-lg border border-[#e5e5e5] bg-white p-4 shadow-sm">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1 block text-xs font-medium text-[#666666]">
+                Priority
+              </label>
 
-          <span
-            className={
-              project.priority === "High"
-                ? "shrink-0 text-sm text-red-500"
-                : project.priority === "Medium"
-                  ? "shrink-0 text-sm text-orange-500"
-                  : "shrink-0 text-sm text-green-600"
-            }
-          >
-            {project.priority}
-          </span>
+              <select
+                value={filterPriority}
+                onChange={(event) =>
+                  setFilterPriority(event.target.value)
+                }
+                className="w-full rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm outline-none focus:border-[#999999]"
+              >
+                <option>All</option>
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-medium text-[#666666]">
+                Lead
+              </label>
+
+              <select
+                value={filterLead}
+                onChange={(event) =>
+                  setFilterLead(event.target.value)
+                }
+                className="w-full rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm outline-none focus:border-[#999999]"
+              >
+                <option>All</option>
+
+                {leads.map((leadName) => (
+                  <option
+                    key={leadName}
+                    value={leadName}
+                  >
+                    {leadName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-4 flex justify-end">
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="text-sm text-[#666666] hover:text-[#171717]"
+            >
+              Clear filters
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="overflow-hidden rounded-lg border border-[#e5e5e5] bg-white">
+        {/* Desktop header */}
+        <div className="hidden grid-cols-[2fr_1fr_1fr_1fr_auto] border-b bg-gray-50 px-5 py-3 text-xs font-medium text-gray-500 sm:grid">
+          <span>Project</span>
+          <span>Priority</span>
+          <span>Lead</span>
+          <span>Due Date</span>
+          <span></span>
         </div>
 
-        <div className="space-y-2 text-sm">
-          <div className="flex justify-between gap-4">
-            <span className="text-[#888888]">
-              Lead
+        {filteredProjects.length === 0 && (
+          <div className="px-5 py-10 text-center text-sm text-gray-500">
+            No projects found.
+          </div>
+        )}
+
+        {filteredProjects.map((project) => (
+          <div
+            key={project.id}
+            className="border-b px-4 py-4 last:border-b-0 sm:grid sm:grid-cols-[2fr_1fr_1fr_1fr_auto] sm:items-center sm:px-5"
+          >
+            {/* Mobile */}
+            <div className="sm:hidden">
+              <div className="flex items-start justify-between gap-3">
+                <span className="font-medium text-[#171717]">
+                  {project.name}
+                </span>
+
+                <span
+                  className={
+                    project.priority === "High"
+                      ? "shrink-0 text-red-500"
+                      : project.priority === "Medium"
+                        ? "shrink-0 text-orange-500"
+                        : "shrink-0 text-green-600"
+                  }
+                >
+                  {project.priority}
+                </span>
+              </div>
+
+              <div className="mt-3 space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">
+                    Lead
+                  </span>
+
+                  <span className="text-[#171717]">
+                    {project.lead}
+                  </span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-500">
+                    Due Date
+                  </span>
+
+                  <span className="text-[#171717]">
+                    {project.dueDate}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-4 flex gap-2 border-t border-[#eeeeee] pt-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    openEditModal(project)
+                  }
+                  className="flex-1 rounded-md border border-[#e5e5e5] px-3 py-2 text-sm text-[#666666] hover:bg-[#f5f5f5] hover:text-[#171717]"
+                >
+                  Edit
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    deleteProject(project.id)
+                  }
+                  className="flex-1 rounded-md border border-red-100 px-3 py-2 text-sm text-red-500 hover:bg-red-50"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+
+            {/* Desktop */}
+            <span className="hidden font-medium text-[#171717] sm:block">
+              {project.name}
             </span>
 
-            <span className="text-right text-[#333333]">
+            <span
+              className={`hidden sm:block ${
+                project.priority === "High"
+                  ? "text-red-500"
+                  : project.priority === "Medium"
+                    ? "text-orange-500"
+                    : "text-green-600"
+              }`}
+            >
+              {project.priority}
+            </span>
+
+            <span className="hidden sm:block">
               {project.lead}
             </span>
-          </div>
 
-          <div className="flex justify-between gap-4">
-            <span className="text-[#888888]">
-              Due Date
-            </span>
-
-            <span className="text-right text-[#333333]">
+            <span className="hidden text-gray-500 sm:block">
               {project.dueDate}
             </span>
+
+            <div className="hidden items-center gap-2 sm:flex">
+              <button
+                type="button"
+                onClick={() =>
+                  openEditModal(project)
+                }
+                className="rounded-md px-2 py-1 text-xs text-[#666666] hover:bg-[#f5f5f5] hover:text-[#171717]"
+              >
+                Edit
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  deleteProject(project.id)
+                }
+                className="rounded-md px-2 py-1 text-xs text-red-500 hover:bg-red-50"
+              >
+                Delete
+              </button>
+            </div>
           </div>
-        </div>
-
-        <div className="mt-4 flex gap-2 border-t border-[#eeeeee] pt-3">
-          <button
-            type="button"
-            onClick={() => openEditModal(project)}
-            className="flex-1 rounded-md border border-[#e5e5e5] px-3 py-2 text-sm text-[#555555] hover:bg-[#f7f7f7]"
-          >
-            Edit
-          </button>
-
-          <button
-            type="button"
-            onClick={() => deleteProject(project.id)}
-            className="flex-1 rounded-md border border-red-100 px-3 py-2 text-sm text-red-500 hover:bg-red-50"
-          >
-            Delete
-          </button>
-        </div>
+        ))}
       </div>
-    ))}
-  </div>
-
-</div>
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -385,11 +487,11 @@ export default function ProjectList({
                 />
               </div>
 
-              <div className="flex flex-col-reverse gap-2 pt-3 sm:flex-row sm:justify-end">
+              <div className="flex justify-end gap-2 pt-3">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="rounded-md border border-[#e5e5e5] px-4 py-2 text-sm text-[#666666] hover:bg-[#f7f7f7]"
+                  className="rounded-md border border-[#e5e5e5] px-4 py-2 text-sm text-[#666666]"
                 >
                   Cancel
                 </button>

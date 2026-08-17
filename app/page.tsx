@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import MainLayout from "@/components/layout/MainLayout";
 import TaskBoard, { Task } from "@/components/tasks/TaskBoard";
 import TaskFilters from "@/components/filters/TaskFilters";
@@ -17,6 +18,15 @@ type FilterValues = {
 };
 
 export default function Home() {
+    const router = useRouter();
+
+  useEffect(() => {
+    const auth = localStorage.getItem("ablespace-auth");
+
+    if (auth !== "guest") {
+      router.push("/login");
+    }
+  }, [router]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
