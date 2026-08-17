@@ -20,19 +20,19 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="hidden h-screen w-[240px] shrink-0 border-r border-[#e8e8e8] bg-white md:flex md:flex-col">
+    <aside className="hidden h-screen w-[240px] shrink-0 border-r border-[var(--border)] bg-[var(--surface)] md:flex md:flex-col">
       {/* Workspace */}
-      <div className="flex h-[64px] items-center justify-between border-b border-[#eeeeee] px-4">
-        <button className="flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-[#f7f7f7]">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#171717] text-xs font-semibold text-white">
+      <div className="flex h-[64px] items-center justify-between border-b border-[var(--border)] px-4">
+        <button className="flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-black/5 dark:hover:bg-white/5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#171717] text-xs font-semibold text-white dark:bg-white dark:text-[#171717]">
             D
           </div>
 
-          <span className="text-sm font-medium">
+          <span className="text-sm font-medium text-[var(--foreground)]">
             Dexter
           </span>
 
-          <span className="ml-1 text-xs text-[#8a8a8a]">
+          <span className="ml-1 text-xs text-[var(--muted)]">
             ▾
           </span>
         </button>
@@ -40,7 +40,7 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4">
-        <p className="mb-2 px-2 text-[11px] font-medium uppercase tracking-wide text-[#999999]">
+        <p className="mb-2 px-2 text-[11px] font-medium uppercase tracking-wide text-[var(--muted)]">
           Workspace
         </p>
 
@@ -57,8 +57,8 @@ export default function Sidebar() {
                 href={item.href}
                 className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition ${
                   isActive
-                    ? "bg-[#f1f1f1] font-medium text-[#171717]"
-                    : "text-[#666666] hover:bg-[#f7f7f7]"
+                    ? "bg-black/5 font-medium text-[var(--foreground)] dark:bg-white/10"
+                    : "text-[var(--muted)] hover:bg-black/5 hover:text-[var(--foreground)] dark:hover:bg-white/5"
                 }`}
               >
                 <span className="flex w-4 justify-center text-[16px]">
@@ -73,8 +73,8 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom */}
-      <div className="border-t border-[#eeeeee] p-3">
-        <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-[#666666] hover:bg-[#f7f7f7]">
+      <div className="border-t border-[var(--border)] p-3">
+        <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-[var(--muted)] hover:bg-black/5 hover:text-[var(--foreground)] dark:hover:bg-white/5">
           <span>⚙</span>
           Settings
         </button>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import MainLayout from "@/components/layout/MainLayout";
 import TaskBoard, { Task } from "@/components/tasks/TaskBoard";
 import TaskFilters from "@/components/filters/TaskFilters";
@@ -18,15 +17,6 @@ type FilterValues = {
 };
 
 export default function Home() {
-    const router = useRouter();
-
-  useEffect(() => {
-    const auth = localStorage.getItem("ablespace-auth");
-
-    if (auth !== "guest") {
-      router.push("/login");
-    }
-  }, [router]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -45,7 +35,6 @@ export default function Home() {
 
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-  // Load tasks from MongoDB through NestJS
   useEffect(() => {
     const loadTasks = async () => {
       try {
@@ -280,8 +269,8 @@ export default function Home() {
   if (!isLoaded) {
     return (
       <MainLayout>
-        <div className="flex min-h-screen items-center justify-center bg-[#fafafa]">
-          <p className="text-sm text-[#666666]">
+        <div className="flex min-h-screen items-center justify-center bg-[var(--background)]">
+          <p className="text-sm text-[var(--muted)]">
             Loading tasks...
           </p>
         </div>
@@ -291,13 +280,13 @@ export default function Home() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-[#fafafa]">
-       <header className="flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-[#e8e8e8] bg-white px-4 sm:px-6">
-          <h1 className="text-lg font-semibold text-[#171717]">
+      <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+        <header className="flex min-h-16 items-center justify-between gap-4 border-b border-[var(--border)] bg-[var(--surface)] px-6">
+          <h1 className="text-lg font-semibold text-[var(--foreground)]">
             Tasks
           </h1>
 
-         <div className="flex w-full items-center gap-2 sm:w-auto">
+          <div className="flex items-center gap-2">
             <SearchBar
               value={search}
               onSearch={setSearch}
@@ -308,7 +297,7 @@ export default function Home() {
               onClick={() =>
                 setShowFilters((current) => !current)
               }
-              className="rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#666666] hover:bg-[#f7f7f7]"
+              className="rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--muted)] hover:bg-black/5 dark:hover:bg-white/5"
             >
               Filter
             </button>
@@ -318,7 +307,7 @@ export default function Home() {
             <button
               type="button"
               onClick={() => openTaskModal("todo")}
-              className="whitespace-nowrap rounded-md bg-[#171717] px-4 py-2 text-sm font-medium text-white hover:bg-[#333333]"
+              className="rounded-md bg-[#171717] px-4 py-2 text-sm font-medium text-white hover:bg-[#333333] dark:bg-white dark:text-[#171717] dark:hover:bg-[#e5e5e5]"
             >
               + Add Task
             </button>
