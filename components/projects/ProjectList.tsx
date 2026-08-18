@@ -187,23 +187,25 @@ export default function ProjectList({
 
   return (
     <>
+      {/* Filter button */}
       <div className="mb-4 flex items-center justify-end">
         <button
           type="button"
           onClick={() =>
             setShowFilters((current) => !current)
           }
-          className="rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#666666] hover:bg-[#f7f7f7]"
+          className="rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#666666] hover:bg-[#f7f7f7] dark:border-[#333333] dark:bg-[#171717] dark:text-[#aaaaaa] dark:hover:bg-[#2a2a2a]"
         >
           Filter
         </button>
       </div>
 
+      {/* Filters */}
       {showFilters && (
-        <div className="mb-4 rounded-lg border border-[#e5e5e5] bg-white p-4 shadow-sm">
+        <div className="mb-4 rounded-lg border border-[#e5e5e5] bg-white p-4 shadow-sm dark:border-[#333333] dark:bg-[#171717]">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-medium text-[#666666]">
+              <label className="mb-1 block text-xs font-medium text-[#666666] dark:text-[#aaaaaa]">
                 Priority
               </label>
 
@@ -212,7 +214,7 @@ export default function ProjectList({
                 onChange={(event) =>
                   setFilterPriority(event.target.value)
                 }
-                className="w-full rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm outline-none focus:border-[#999999]"
+                className="w-full rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#171717] outline-none focus:border-[#999999] dark:border-[#333333] dark:bg-[#222222] dark:text-white"
               >
                 <option>All</option>
                 <option>High</option>
@@ -222,7 +224,7 @@ export default function ProjectList({
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-medium text-[#666666]">
+              <label className="mb-1 block text-xs font-medium text-[#666666] dark:text-[#aaaaaa]">
                 Lead
               </label>
 
@@ -231,7 +233,7 @@ export default function ProjectList({
                 onChange={(event) =>
                   setFilterLead(event.target.value)
                 }
-                className="w-full rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm outline-none focus:border-[#999999]"
+                className="w-full rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#171717] outline-none focus:border-[#999999] dark:border-[#333333] dark:bg-[#222222] dark:text-white"
               >
                 <option>All</option>
 
@@ -251,7 +253,7 @@ export default function ProjectList({
             <button
               type="button"
               onClick={clearFilters}
-              className="text-sm text-[#666666] hover:text-[#171717]"
+              className="text-sm text-[#666666] hover:text-[#171717] dark:text-[#aaaaaa] dark:hover:text-white"
             >
               Clear filters
             </button>
@@ -259,9 +261,11 @@ export default function ProjectList({
         </div>
       )}
 
-      <div className="overflow-hidden rounded-lg border border-[#e5e5e5] bg-white">
+      {/* Projects table */}
+      <div className="overflow-hidden rounded-lg border border-[#e5e5e5] bg-white dark:border-[#333333] dark:bg-[#171717]">
+
         {/* Desktop header */}
-        <div className="hidden grid-cols-[2fr_1fr_1fr_1fr_auto] border-b bg-gray-50 px-5 py-3 text-xs font-medium text-gray-500 sm:grid">
+        <div className="hidden grid-cols-[2fr_1fr_1fr_1fr_auto] border-b bg-gray-50 px-5 py-3 text-xs font-medium text-gray-500 dark:border-[#333333] dark:bg-[#222222] dark:text-gray-400 sm:grid">
           <span>Project</span>
           <span>Priority</span>
           <span>Lead</span>
@@ -270,7 +274,7 @@ export default function ProjectList({
         </div>
 
         {filteredProjects.length === 0 && (
-          <div className="px-5 py-10 text-center text-sm text-gray-500">
+          <div className="px-5 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
             No projects found.
           </div>
         )}
@@ -278,12 +282,13 @@ export default function ProjectList({
         {filteredProjects.map((project) => (
           <div
             key={project.id}
-            className="border-b px-4 py-4 last:border-b-0 sm:grid sm:grid-cols-[2fr_1fr_1fr_1fr_auto] sm:items-center sm:px-5"
+            className="border-b border-[#e5e5e5] px-4 py-4 last:border-b-0 dark:border-[#333333] sm:grid sm:grid-cols-[2fr_1fr_1fr_1fr_auto] sm:items-center sm:px-5"
           >
+
             {/* Mobile */}
             <div className="sm:hidden">
               <div className="flex items-start justify-between gap-3">
-                <span className="font-medium text-[#171717]">
+                <span className="font-medium text-[#171717] dark:text-white">
                   {project.name}
                 </span>
 
@@ -302,33 +307,33 @@ export default function ProjectList({
 
               <div className="mt-3 space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 dark:text-gray-400">
                     Lead
                   </span>
 
-                  <span className="text-[#171717]">
+                  <span className="text-[#171717] dark:text-white">
                     {project.lead}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 dark:text-gray-400">
                     Due Date
                   </span>
 
-                  <span className="text-[#171717]">
+                  <span className="text-[#171717] dark:text-white">
                     {project.dueDate}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-4 flex gap-2 border-t border-[#eeeeee] pt-3">
+              <div className="mt-4 flex gap-2 border-t border-[#eeeeee] pt-3 dark:border-[#333333]">
                 <button
                   type="button"
                   onClick={() =>
                     openEditModal(project)
                   }
-                  className="flex-1 rounded-md border border-[#e5e5e5] px-3 py-2 text-sm text-[#666666] hover:bg-[#f5f5f5] hover:text-[#171717]"
+                  className="flex-1 rounded-md border border-[#e5e5e5] px-3 py-2 text-sm text-[#666666] hover:bg-[#f5f5f5] hover:text-[#171717] dark:border-[#333333] dark:text-[#aaaaaa] dark:hover:bg-[#2a2a2a] dark:hover:text-white"
                 >
                   Edit
                 </button>
@@ -338,7 +343,7 @@ export default function ProjectList({
                   onClick={() =>
                     deleteProject(project.id)
                   }
-                  className="flex-1 rounded-md border border-red-100 px-3 py-2 text-sm text-red-500 hover:bg-red-50"
+                  className="flex-1 rounded-md border border-red-100 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:border-red-900/40 dark:hover:bg-red-950/30"
                 >
                   Delete
                 </button>
@@ -346,7 +351,7 @@ export default function ProjectList({
             </div>
 
             {/* Desktop */}
-            <span className="hidden font-medium text-[#171717] sm:block">
+            <span className="hidden font-medium text-[#171717] dark:text-white sm:block">
               {project.name}
             </span>
 
@@ -362,11 +367,11 @@ export default function ProjectList({
               {project.priority}
             </span>
 
-            <span className="hidden sm:block">
+            <span className="hidden text-[#171717] dark:text-white sm:block">
               {project.lead}
             </span>
 
-            <span className="hidden text-gray-500 sm:block">
+            <span className="hidden text-gray-500 dark:text-gray-400 sm:block">
               {project.dueDate}
             </span>
 
@@ -376,7 +381,7 @@ export default function ProjectList({
                 onClick={() =>
                   openEditModal(project)
                 }
-                className="rounded-md px-2 py-1 text-xs text-[#666666] hover:bg-[#f5f5f5] hover:text-[#171717]"
+                className="rounded-md px-2 py-1 text-xs text-[#666666] hover:bg-[#f5f5f5] hover:text-[#171717] dark:text-[#aaaaaa] dark:hover:bg-[#2a2a2a] dark:hover:text-white"
               >
                 Edit
               </button>
@@ -386,7 +391,7 @@ export default function ProjectList({
                 onClick={() =>
                   deleteProject(project.id)
                 }
-                className="rounded-md px-2 py-1 text-xs text-red-500 hover:bg-red-50"
+                className="rounded-md px-2 py-1 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30"
               >
                 Delete
               </button>
@@ -395,11 +400,13 @@ export default function ProjectList({
         ))}
       </div>
 
+      {/* Add / Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+          <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-[#171717]">
+
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-[#171717]">
+              <h2 className="text-lg font-semibold text-[#171717] dark:text-white">
                 {editingProject
                   ? "Edit Project"
                   : "Add Project"}
@@ -408,7 +415,7 @@ export default function ProjectList({
               <button
                 type="button"
                 onClick={closeModal}
-                className="text-xl text-[#999999] hover:text-[#171717]"
+                className="text-xl text-[#999999] hover:text-[#171717] dark:hover:text-white"
               >
                 ×
               </button>
@@ -419,7 +426,7 @@ export default function ProjectList({
               className="space-y-4"
             >
               <div>
-                <label className="mb-1 block text-sm font-medium text-[#555555]">
+                <label className="mb-1 block text-sm font-medium text-[#555555] dark:text-[#bbbbbb]">
                   Project name
                 </label>
 
@@ -430,12 +437,12 @@ export default function ProjectList({
                     setName(event.target.value)
                   }
                   placeholder="Enter project name"
-                  className="w-full rounded-md border border-[#e5e5e5] px-3 py-2 text-sm outline-none focus:border-[#999999]"
+                  className="w-full rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#171717] outline-none focus:border-[#999999] dark:border-[#333333] dark:bg-[#222222] dark:text-white dark:placeholder:text-gray-500"
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-[#555555]">
+                <label className="mb-1 block text-sm font-medium text-[#555555] dark:text-[#bbbbbb]">
                   Priority
                 </label>
 
@@ -446,7 +453,7 @@ export default function ProjectList({
                       event.target.value as Project["priority"]
                     )
                   }
-                  className="w-full rounded-md border border-[#e5e5e5] px-3 py-2 text-sm outline-none"
+                  className="w-full rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#171717] outline-none dark:border-[#333333] dark:bg-[#222222] dark:text-white"
                 >
                   <option value="High">High</option>
                   <option value="Medium">Medium</option>
@@ -455,7 +462,7 @@ export default function ProjectList({
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-[#555555]">
+                <label className="mb-1 block text-sm font-medium text-[#555555] dark:text-[#bbbbbb]">
                   Lead
                 </label>
 
@@ -466,12 +473,12 @@ export default function ProjectList({
                     setLead(event.target.value)
                   }
                   placeholder="Enter lead name"
-                  className="w-full rounded-md border border-[#e5e5e5] px-3 py-2 text-sm outline-none focus:border-[#999999]"
+                  className="w-full rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#171717] outline-none focus:border-[#999999] dark:border-[#333333] dark:bg-[#222222] dark:text-white dark:placeholder:text-gray-500"
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-[#555555]">
+                <label className="mb-1 block text-sm font-medium text-[#555555] dark:text-[#bbbbbb]">
                   Due date
                 </label>
 
@@ -483,7 +490,7 @@ export default function ProjectList({
                     setDueDate(event.target.value)
                   }
                   placeholder="e.g. 25 Sep 2026"
-                  className="w-full rounded-md border border-[#e5e5e5] px-3 py-2 text-sm outline-none focus:border-[#999999]"
+                  className="w-full rounded-md border border-[#e5e5e5] bg-white px-3 py-2 text-sm text-[#171717] outline-none focus:border-[#999999] dark:border-[#333333] dark:bg-[#222222] dark:text-white dark:placeholder:text-gray-500"
                 />
               </div>
 
@@ -491,7 +498,7 @@ export default function ProjectList({
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="rounded-md border border-[#e5e5e5] px-4 py-2 text-sm text-[#666666]"
+                  className="rounded-md border border-[#e5e5e5] px-4 py-2 text-sm text-[#666666] hover:bg-[#f5f5f5] dark:border-[#333333] dark:text-[#aaaaaa] dark:hover:bg-[#2a2a2a]"
                 >
                   Cancel
                 </button>
