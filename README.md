@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AbleSpace Assessment
 
-## Getting Started
+A full-stack project management application built as part of the AbleSpace assessment.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+* Create, edit, and delete projects/tasks
+* Search and filter projects/tasks
+* Persistent project/task data
+* Guest login flow
+* Light/Dark theme switching
+* Responsive user interface
+* REST API integration
+* MongoDB database integration
+* Next.js frontend with App Router
+* NestJS backend
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* Next.js
+* React
+* TypeScript
+* Tailwind CSS
+
+### Backend
+
+* NestJS
+* TypeScript
+* REST API
+
+### Database
+
+* MongoDB
+* MongoDB Atlas
+
+## 📁 Project Structure
+
+```text
+AbleSpace-Assessment/
+└── frontend/
+    ├── app/
+    ├── components/
+    ├── public/
+    ├── package.json
+    └── ...
+    └── backend/
+        ├── src/
+        ├── package.json
+        └── ...
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚙️ Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1. Clone the repository
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+git clone https://github.com/NoorFathima0204/Ablespace-Assignment.git
+cd Ablespace-Assignment
+```
 
-## Learn More
+### 2. Start the Frontend
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The frontend will run at:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```text
+http://localhost:3000
+```
 
-## Deploy on Vercel
+### 3. Start the Backend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Open a second terminal:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+cd frontend/backend
+npm install
+npm run start:dev
+```
+
+The backend runs on:
+
+```text
+http://localhost:3001
+```
+
+## 🔐 Environment Variables
+
+Create the required environment configuration for the backend/database connection.
+
+Example:
+
+```env
+MONGODB_URI=your_mongodb_connection_string
+```
+
+Do not commit actual credentials or secrets to the repository.
+
+## 🔄 Application Flow
+
+The Next.js frontend communicates with the NestJS REST API for project/task operations. Data is stored in MongoDB and remains available after refreshing the application.
+
+## 🧪 Testing
+
+The following functionality has been verified:
+
+* ✅ Add project/task
+* ✅ Edit project/task
+* ✅ Delete project/task
+* ✅ Search and filtering
+* ✅ Data persistence after refresh
+* ✅ Theme switching
+* ✅ Guest/login flow
+* ✅ Frontend and backend running successfully
+* ✅ Production build verification
+* ✅ API connectivity
+
+## 📦 Production Build
+
+To verify the frontend production build:
+
+```bash
+npm run build
+```
+
+## 👩‍💻 Author
+
+**Noor Fathima**
+
+GitHub: https://github.com/NoorFathima0204
